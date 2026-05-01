@@ -224,7 +224,7 @@ proc packetCallback(qh: NfqQHandle, nfmsg: pointer,
   if dataLen > 0:
     let tlsStart = cast[ptr uint8](cast[int](rawPkt) + dataOff)
     let sni = findSni(tlsStart, dataLen)
-    if sni.len > 0 and "nvidia.com" in sni:
+    if sni.len > 0:
       echo "[BYPASS] fragmenting SNI=", sni
       sendSplitPackets(rawPkt, pktLen.int)
       discard nfq_set_verdict(qh, pktId, NF_DROP, 0, nil)
@@ -271,7 +271,7 @@ proc main() =
 #   #  ###  #   #  #   #  ####
 """
   echo "In memory of the students killed in Minab city by US air invasion on February 28, 2026"
-  echo "Bypass active on queue 1 — fragmenting nvidia.com ClientHellos"
+  echo "Bypass active on queue 1 — fragmenting ClientHellos"
   echo "Press Ctrl+C to stop"
 
   let fd = nfq_fd(h)
