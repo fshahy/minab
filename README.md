@@ -54,9 +54,16 @@ Browser → [queue 1: bypass] → [queue 0: blocker] → Internet
 
 ## Dependencies
 
+| Package | Required by |
+|---------|-------------|
+| `libnetfilter-queue-dev` | blocker, **bypass** |
+| `libmnl-dev` | blocker, bypass |
+
 ```bash
 sudo apt install libnetfilter-queue-dev libmnl-dev
 ```
+
+> **Note:** The bypass program requires `libnetfilter-queue-dev` at both build time and runtime. Install it before compiling or running `bypass`.
 
 Nim 2.x compiler required.
 
