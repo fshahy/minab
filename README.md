@@ -125,7 +125,7 @@ This produces `winbypass.exe`. Copy `winbypass.exe`, `WinDivert.dll`, and `WinDi
 ```bash
 cd blocker
 sudo ./rules.sh set                  # add iptables rules
-sudo ./blocker passed.txt            # allow only SNIs in passed.txt; block ECH
+sudo ./blocker.bin passed.txt        # allow only SNIs in passed.txt; block ECH
 ```
 
 ```bash
@@ -140,12 +140,12 @@ Run in order — the bypass rule inserts at position 1, so the blocker's rule mu
 # Terminal 1 — deploy blocker
 cd blocker
 sudo ./rules.sh set
-sudo ./blocker passed.txt
+sudo ./blocker.bin passed.txt
 
 # Terminal 2 — deploy bypass (inserts before blocker's rule)
 cd bypass
 sudo ./rules.sh set
-sudo ./bypass
+sudo ./bypass.bin
 ```
 
 ```bash

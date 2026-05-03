@@ -3,11 +3,11 @@ NIMFLAGS := -d:release
 
 .PHONY: all clean
 
-all: blocker
+all: blocker.bin
 
-blocker: blocker.nim
-	$(NIM) c $(NIMFLAGS) $<
+blocker.bin: blocker.nim
+	$(NIM) c $(NIMFLAGS) -o:blocker.bin $<
 
 clean:
-	rm -f blocker
+	rm -f blocker.bin
 	rm -rf nimcache
