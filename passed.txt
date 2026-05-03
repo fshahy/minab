@@ -1,5 +1,0 @@
-# Passed SNIs — connections matching these are always allowed
-# Lines starting with # are ignored
-claude
-microsoft
-google

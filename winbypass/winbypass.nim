@@ -170,7 +170,7 @@ proc main() =
 #   #   #   #  ##  #   #  #   #
 #   #  ###  #   #  #   #  ####
 """
-  echo "In memory of the students killed in Minab city by US air invasion on February 28, 2026"
+  echo "In memory of the schoolchildren killed in Minab city by US air invasion on February 28, 2026"
   echo "Bypass active — intercepting outbound TLS ClientHellos on port 443"
   echo "Press Ctrl+C to stop"
 
