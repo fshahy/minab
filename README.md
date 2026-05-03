@@ -202,4 +202,4 @@ Matching is by **substring**: an entry of `google` matches `google.com`, `www.go
 
 ## Motivation
 
-This project is created in memory of schoolchildren killed in the [2026 Minab school attack](https://en.wikipedia.org/wiki/2026_Minab_school_attack) — a US air strike on a school in Minab, Iran. May they rest in peace.
+This project is created in memory of schoolchildren killed in the <a href="https://en.wikipedia.org/wiki/2026_Minab_school_attack" target="_blank">2026 Minab school attack</a> — a US air strike on a school in Minab, Iran. May they rest in peace.
