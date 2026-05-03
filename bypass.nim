@@ -84,6 +84,11 @@ proc getIpHeaderLen(pkt: ptr uint8): int =
 proc getTcpHeaderLen(tcp: ptr uint8): int =
   (cast[ptr UncheckedArray[uint8]](tcp)[12] shr 4).int * 4
 
+proc isClientHello(payload: ptr uint8, payloadLen: int): bool =
+  if payloadLen < 6: return false
+  let p = cast[ptr UncheckedArray[uint8]](payload)
+  p[0] == 0x16 and p[5] == 0x01
+
 proc findSni(payload: ptr uint8, payloadLen: int): string =
   let p = cast[ptr UncheckedArray[uint8]](payload)
   if payloadLen < 6: return ""
@@ -223,9 +228,10 @@ proc packetCallback(qh: NfqQHandle, nfmsg: pointer,
 
   if dataLen > 0:
     let tlsStart = cast[ptr uint8](cast[int](rawPkt) + dataOff)
-    let sni = findSni(tlsStart, dataLen)
-    if sni.len > 0:
-      echo "[BYPASS] fragmenting SNI=", sni
+    if isClientHello(tlsStart, dataLen):
+      let sni = findSni(tlsStart, dataLen)
+      let label = if sni.len > 0: "SNI=" & sni else: "ECH/unreadable"
+      echo "[BYPASS] fragmenting ", label
       sendSplitPackets(rawPkt, pktLen.int)
       discard nfq_set_verdict(qh, pktId, NF_DROP, 0, nil)
       return 0
