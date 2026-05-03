@@ -67,6 +67,11 @@ proc getTcpHeaderLen(tcpStart: ptr uint8): int =
   let p = cast[ptr UncheckedArray[uint8]](tcpStart)
   (p[12] shr 4).int * 4
 
+proc isClientHello(payload: ptr uint8, payloadLen: int): bool =
+  if payloadLen < 6: return false
+  let p = cast[ptr UncheckedArray[uint8]](payload)
+  p[0] == 0x16 and p[5] == 0x01
+
 proc findSni(payload: ptr uint8, payloadLen: int): string =
   let p = cast[ptr UncheckedArray[uint8]](payload)
   if payloadLen < 6: return ""
@@ -224,13 +229,18 @@ proc packetCallback(qh: NfqQHandle, nfmsg: pointer,
 
   if dataLen > 0:
     let tlsStart = cast[ptr uint8](cast[int](rawPkt) + dataOffset)
-    let sni = findSni(tlsStart, dataLen)
-
-    if sni.len > 0:
-      if isAllowed(sni):
-        echo "[ALLOW] TLS ClientHello → SNI: ", sni
+    if isClientHello(tlsStart, dataLen):
+      let sni = findSni(tlsStart, dataLen)
+      if sni.len > 0:
+        if isAllowed(sni):
+          echo "[ALLOW] TLS ClientHello → SNI: ", sni
+        else:
+          echo "[BLOCK] TLS ClientHello → SNI: ", sni
+          sendRst(rawPkt, pktLen.int)
+          discard nfq_set_verdict(qh, pktId, NF_DROP, 0, nil)
+          return 0
       else:
-        echo "[BLOCK] TLS ClientHello → SNI: ", sni
+        echo "[BLOCK] TLS ClientHello → SNI unreadable (ECH?)"
         sendRst(rawPkt, pktLen.int)
         discard nfq_set_verdict(qh, pktId, NF_DROP, 0, nil)
         return 0
